@@ -1,0 +1,10 @@
+{
+  "target_language": "fr",
+  "capture_fps": 2,
+  "translator": "google",
+  "deepl_api_key": "",
+  "hotkey_toggle": "ctrl+shift+t",
+  "monitor_index": 1,
+  "capture_region": null,
+  "debug_logs": true
+}

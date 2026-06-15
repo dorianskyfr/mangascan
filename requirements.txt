@@ -1,0 +1,32 @@
+# Mangascan — dépendances (versions épinglées)
+# Python 3.10+ requis.
+
+# Capture d'écran
+mss==9.0.1
+
+# OCR
+manga-ocr==0.1.14
+easyocr==1.7.2
+
+# Traduction
+deep-translator==1.11.4
+
+# Détection de langue
+langdetect==1.0.9
+
+# Interface / overlay
+PyQt5==5.15.11
+
+# Vision par ordinateur (détection des bulles)
+opencv-python==4.10.0.84
+
+# Dépendances communes
+numpy==1.26.4
+Pillow==10.4.0
+
+# Backend deep learning (requis par manga-ocr et easyocr)
+torch==2.2.2
+torchvision==0.17.2
+
+# Hotkey globale (Ctrl+Shift+T)
+keyboard==0.13.5
