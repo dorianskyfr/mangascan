@@ -18,6 +18,7 @@ permissions:
 jobs:
   build:
     runs-on: windows-latest
+    timeout-minutes: 60
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,14 +42,28 @@ jobs:
         shell: bash
         run: |
           # --onedir : assemble un dossier (Mangascan.exe + DLL) au lieu d'un
-          # gros fichier unique. Bien plus rapide qu'--onefile avec torch, qui
-          # peut prendre 30+ min ou bloquer.
+          # gros fichier unique (--onefile, très lent avec torch).
+          #
+          # IMPORTANT : on n'utilise PAS --collect-all torch/torchvision.
+          # Le hook torch intégré à PyInstaller gère déjà binaires et
+          # sous-modules ; --collect-all torch sature l'analyse (40 min+).
+          # On se contente de fournir les métadonnées requises par
+          # transformers (manga-ocr) / easyocr.
           pyinstaller --noconfirm --onedir --windowed --name Mangascan \
             --collect-all manga_ocr \
             --collect-all easyocr \
-            --collect-all torch \
-            --collect-all torchvision \
             --collect-all cv2 \
+            --copy-metadata torch \
+            --copy-metadata tqdm \
+            --copy-metadata regex \
+            --copy-metadata requests \
+            --copy-metadata filelock \
+            --copy-metadata numpy \
+            --copy-metadata packaging \
+            --copy-metadata huggingface-hub \
+            --copy-metadata safetensors \
+            --copy-metadata pyyaml \
+            --copy-metadata tokenizers \
             mangascan.py
 
       - name: Empaqueter en archive ZIP
