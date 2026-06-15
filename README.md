@@ -115,6 +115,15 @@ Par défaut, Mangascan utilise **Google Translate (gratuit)**. Pour utiliser
 
 ## 🚀 Lancement
 
+**Option 1 — fichier unique (recommandé)** : toute l'application tient dans un
+seul fichier exécutable.
+
+```bash
+python mangascan.py
+```
+
+**Option 2 — version modulaire** (mêmes fonctionnalités, code réparti) :
+
 ```bash
 python main.py
 ```
