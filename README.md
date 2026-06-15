@@ -116,21 +116,24 @@ Par défaut, Mangascan utilise **Google Translate (gratuit)**. Pour utiliser
 ## 🚀 Lancement
 
 **Option 0 — exécutable Windows (.exe)** : aucune installation Python requise.
-Téléchargez `Mangascan.exe` depuis la page
-[Releases](https://github.com/dorianskyfr/mangascan/releases) et double-cliquez.
-Au premier lancement de l'OCR, le modèle manga-ocr (~400 Mo) se télécharge
-automatiquement (connexion Internet requise).
+Téléchargez `Mangascan-windows.zip` depuis la page
+[Releases](https://github.com/dorianskyfr/mangascan/releases), décompressez-le
+et double-cliquez sur `Mangascan.exe`. Au premier lancement de l'OCR, le modèle
+manga-ocr (~400 Mo) se télécharge automatiquement (connexion Internet requise).
 
 > 🔧 L'exe est construit automatiquement par GitHub Actions (PyInstaller sur un
 > runner Windows). Pour le générer soi-même :
 > ```bash
 > pip install -r requirements.txt pyinstaller
-> pyinstaller --onefile --windowed --name Mangascan \
+> pyinstaller --onedir --windowed --name Mangascan \
 >   --collect-all manga_ocr --collect-all easyocr \
 >   --collect-all torch --collect-all torchvision --collect-all cv2 \
 >   mangascan.py
-> # -> dist/Mangascan.exe
+> # -> dist/Mangascan/Mangascan.exe
 > ```
+> Le mode `--onedir` est privilégié : avec des dépendances lourdes comme torch,
+> `--onefile` est extrêmement lent (30 min+) et le démarrage de l'exe est plus
+> long. Le dossier `dist/Mangascan/` contient `Mangascan.exe` et ses DLL.
 
 **Option 1 — fichier unique (recommandé)** : toute l'application tient dans un
 seul fichier exécutable.

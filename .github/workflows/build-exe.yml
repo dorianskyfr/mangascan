@@ -37,10 +37,13 @@ jobs:
           pip install -r requirements.txt
           pip install pyinstaller==6.6.0
 
-      - name: Construire l'exécutable
+      - name: Construire l'exécutable (mode dossier, plus rapide/fiable)
         shell: bash
         run: |
-          pyinstaller --noconfirm --onefile --windowed --name Mangascan \
+          # --onedir : assemble un dossier (Mangascan.exe + DLL) au lieu d'un
+          # gros fichier unique. Bien plus rapide qu'--onefile avec torch, qui
+          # peut prendre 30+ min ou bloquer.
+          pyinstaller --noconfirm --onedir --windowed --name Mangascan \
             --collect-all manga_ocr \
             --collect-all easyocr \
             --collect-all torch \
@@ -48,11 +51,17 @@ jobs:
             --collect-all cv2 \
             mangascan.py
 
+      - name: Empaqueter en archive ZIP
+        shell: pwsh
+        run: |
+          Compress-Archive -Path dist/Mangascan/* `
+            -DestinationPath dist/Mangascan-windows.zip -Force
+
       - name: Publier l'artefact
         uses: actions/upload-artifact@v4
         with:
           name: Mangascan-windows-${{ github.event.inputs.version }}
-          path: dist/Mangascan.exe
+          path: dist/Mangascan-windows.zip
 
       - name: Créer/mettre à jour la release et y attacher l'exe
         shell: bash
@@ -60,13 +69,13 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "${{ github.event.inputs.version }}" \
-            "dist/Mangascan.exe#Mangascan.exe (Windows)" \
+            "dist/Mangascan-windows.zip#Mangascan ${{ github.event.inputs.version }} (Windows .exe)" \
             --target main \
             --title "Mangascan ${{ github.event.inputs.version }}" \
             --notes "Mangascan ${{ github.event.inputs.version }} — application de bureau de traduction de manga en temps réel.
 
-          Téléchargez \`Mangascan.exe\` ci-dessous (Windows 10/11, aucune installation Python requise).
+          Téléchargez \`Mangascan-windows.zip\` ci-dessous (Windows 10/11, aucune installation Python requise), décompressez-le et lancez \`Mangascan.exe\`.
 
           Au premier lancement de l'OCR, le modèle manga-ocr (~400 Mo) est téléchargé automatiquement (connexion Internet requise)." \
           || gh release upload "${{ github.event.inputs.version }}" \
-            "dist/Mangascan.exe#Mangascan.exe (Windows)" --clobber
+            "dist/Mangascan-windows.zip#Mangascan ${{ github.event.inputs.version }} (Windows .exe)" --clobber
