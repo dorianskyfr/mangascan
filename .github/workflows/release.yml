@@ -1,0 +1,35 @@
+name: Release
+
+# Crée une release GitHub (et le tag associé) depuis l'interface Actions.
+# Déclenchement manuel : Actions -> Release -> Run workflow.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Tag de version (ex. v0.5)"
+        required: true
+        default: "v0.5"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Créer la release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ github.event.inputs.version }}" \
+            --target main \
+            --title "Mangascan ${{ github.event.inputs.version }}" \
+            --notes "Mangascan ${{ github.event.inputs.version }} — application de bureau de traduction de manga en temps réel.
+
+          Fonctionnalités : capture d'écran (mss), détection des bulles (OpenCV), OCR manga-ocr (JP) avec repli EasyOCR (KO/ZH), traduction Google/DeepL (deep-translator) avec cache, overlay PyQt5 transparente, hotkey globale Ctrl+Shift+T.
+
+          Lancement : \`python mangascan.py\` (fichier unique) ou \`python main.py\` (version modulaire)."
