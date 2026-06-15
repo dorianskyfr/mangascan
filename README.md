@@ -1,4 +1,4 @@
-# Mangascan 🈂️ → 🗨️ — v0.5
+# Mangascan 🈂️ → 🗨️ — v0.6
 
 Application de bureau (Python) qui **capture l'écran en temps réel**, **détecte
 le texte des planches de manga** (japonais en priorité, coréen/chinois en
@@ -114,6 +114,23 @@ Par défaut, Mangascan utilise **Google Translate (gratuit)**. Pour utiliser
 ---
 
 ## 🚀 Lancement
+
+**Option 0 — exécutable Windows (.exe)** : aucune installation Python requise.
+Téléchargez `Mangascan.exe` depuis la page
+[Releases](https://github.com/dorianskyfr/mangascan/releases) et double-cliquez.
+Au premier lancement de l'OCR, le modèle manga-ocr (~400 Mo) se télécharge
+automatiquement (connexion Internet requise).
+
+> 🔧 L'exe est construit automatiquement par GitHub Actions (PyInstaller sur un
+> runner Windows). Pour le générer soi-même :
+> ```bash
+> pip install -r requirements.txt pyinstaller
+> pyinstaller --onefile --windowed --name Mangascan \
+>   --collect-all manga_ocr --collect-all easyocr \
+>   --collect-all torch --collect-all torchvision --collect-all cv2 \
+>   mangascan.py
+> # -> dist/Mangascan.exe
+> ```
 
 **Option 1 — fichier unique (recommandé)** : toute l'application tient dans un
 seul fichier exécutable.

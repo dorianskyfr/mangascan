@@ -1,0 +1,72 @@
+name: Build Windows EXE & Release
+
+# Construit l'exécutable Windows (.exe) via PyInstaller sur un runner Windows,
+# le publie comme artefact et l'attache à une release GitHub.
+# Déclenchement manuel : Actions -> Build Windows EXE & Release -> Run workflow.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Tag de version (ex. v0.6)"
+        required: true
+        default: "v0.6"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Installer Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Installer les dépendances
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          # Torch CPU d'abord (wheels plus légers -> build .exe plus rapide/fiable).
+          pip install torch==2.2.2 torchvision==0.17.2 \
+            --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt
+          pip install pyinstaller==6.6.0
+
+      - name: Construire l'exécutable
+        shell: bash
+        run: |
+          pyinstaller --noconfirm --onefile --windowed --name Mangascan \
+            --collect-all manga_ocr \
+            --collect-all easyocr \
+            --collect-all torch \
+            --collect-all torchvision \
+            --collect-all cv2 \
+            mangascan.py
+
+      - name: Publier l'artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mangascan-windows-${{ github.event.inputs.version }}
+          path: dist/Mangascan.exe
+
+      - name: Créer/mettre à jour la release et y attacher l'exe
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ github.event.inputs.version }}" \
+            "dist/Mangascan.exe#Mangascan.exe (Windows)" \
+            --target main \
+            --title "Mangascan ${{ github.event.inputs.version }}" \
+            --notes "Mangascan ${{ github.event.inputs.version }} — application de bureau de traduction de manga en temps réel.
+
+          Téléchargez \`Mangascan.exe\` ci-dessous (Windows 10/11, aucune installation Python requise).
+
+          Au premier lancement de l'OCR, le modèle manga-ocr (~400 Mo) est téléchargé automatiquement (connexion Internet requise)." \
+          || gh release upload "${{ github.event.inputs.version }}" \
+            "dist/Mangascan.exe#Mangascan.exe (Windows)" --clobber

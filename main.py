@@ -20,7 +20,7 @@ from worker import CaptureWorker
 logger = logging.getLogger("mangascan")
 
 # Version de l'application.
-__version__ = "0.5"
+__version__ = "0.6"
 
 # Langues cibles proposées dans l'UI (code ISO -> libellé).
 TARGET_LANGUAGES = {

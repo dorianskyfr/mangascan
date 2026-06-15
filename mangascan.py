@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Mangascan v0.5 — application tout-en-un (un seul fichier à exécuter).
+"""Mangascan v0.6 — application tout-en-un (un seul fichier à exécuter).
 
 Capture l'écran en temps réel, détecte le texte des planches de manga
 (japonais en priorité, coréen/chinois en repli), le traduit dans la langue
@@ -27,7 +27,7 @@ from typing import Dict, List, Optional, Tuple
 # ---------------------------------------------------------------------------
 # Version
 # ---------------------------------------------------------------------------
-__version__ = "0.5"
+__version__ = "0.6"
 
 logger = logging.getLogger("mangascan")
 
