@@ -1,0 +1,2 @@
+# mangascan
+traduction mangas
