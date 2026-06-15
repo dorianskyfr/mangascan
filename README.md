@@ -1,4 +1,4 @@
-# Mangascan 🈂️ → 🗨️
+# Mangascan 🈂️ → 🗨️ — v0.5
 
 Application de bureau (Python) qui **capture l'écran en temps réel**, **détecte
 le texte des planches de manga** (japonais en priorité, coréen/chinois en

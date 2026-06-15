@@ -19,6 +19,9 @@ from worker import CaptureWorker
 
 logger = logging.getLogger("mangascan")
 
+# Version de l'application.
+__version__ = "0.5"
+
 # Langues cibles proposées dans l'UI (code ISO -> libellé).
 TARGET_LANGUAGES = {
     "fr": "Français",
@@ -48,7 +51,7 @@ class ControlWindow(QtWidgets.QMainWindow):
         self.config = config
         self.worker: Optional[CaptureWorker] = None
 
-        self.setWindowTitle("Mangascan — Traduction manga en temps réel")
+        self.setWindowTitle(f"Mangascan v{__version__} — Traduction manga en temps réel")
         self.resize(460, 520)
 
         # Overlay de traduction (créé une fois, réutilisé).
